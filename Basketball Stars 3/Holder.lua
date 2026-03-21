@@ -518,7 +518,7 @@ DefenseLeft:AddToggle("AutoContest", {
                     end
                 end)
             else
-                -- pc version, presses G key when enemy shooting anim detected
+                -- pc version, presses G key when other plr shooting anim detected
                 local contestIds = {["15625460755"] = true, ["15640551795"] = true, ["15640621238"] = true, ["15933297660"] = true, ["15933244201"] = true, ["16792383527"] = true}
                 local pressing = false
 
