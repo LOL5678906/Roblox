@@ -20,7 +20,7 @@ local Toggles = Library.Toggles
 
 --// Window \\--
 local Window = Library:CreateWindow({
-    Title = "LOOEJ",
+    Title = "Wraith",
     Footer = "Basketball Stars 3 | By stacktrace45 | Open source | Discord : discord.gg/NxbdayKh",
     Icon = 14523252412,
     NotifySide = "Right",
