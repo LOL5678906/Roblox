@@ -1,6 +1,4 @@
 local RS = game:GetService("ReplicatedStorage")
-local LS = game:GetService("LogService")
-
 
 local Service = nil
 for _, v in getgc(true) do
@@ -42,6 +40,3 @@ for _, v in getgc() do
         end
     end
 end
-
-
-warn(1)
