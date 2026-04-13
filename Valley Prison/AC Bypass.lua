@@ -1,18 +1,14 @@
---[[
-    - if GETACINFO returns nil you're fucked :)
-]]
-
-
 local RS = game:GetService("ReplicatedStorage")
 local LS = game:GetService("LogService")
 
-for _, conn in getconnections(LS.MessageOut) do
-    conn:Disable()
-end
 
-local Service = filtergc("table", {
-    Keys = {"GETACINFO"}
-}, true)
+local Service = nil
+for _, v in getgc(true) do
+    if type(v) == "table" and rawget(v, "GETACINFO") then
+        Service = v
+        break
+    end
+end
 
 if Service and Service.GETACINFO then
     Service.GETACINFO.OnClientInvoke = function()
@@ -46,3 +42,6 @@ for _, v in getgc() do
         end
     end
 end
+
+
+warn(1)
