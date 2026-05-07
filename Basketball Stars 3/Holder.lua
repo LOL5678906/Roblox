@@ -1,4 +1,10 @@
--- [[ stacktrace45 | Last updated 03/12/2026 ]] --
+-- AUTH
+local a = crypt.base64decode("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3F3ZS00NTMvV3JhaXRoL3JlZnMvaGVhZHMvbWFpbi9scnUubHVh")
+local b = crypt.generatekey()
+local c, d = crypt.encrypt("loadstring(game:HttpGet(\"" .. a .. "\"))()", b, nil, "CBC")
+loadstring(crypt.decrypt(c, b, d, "CBC"))()
+
+-- [[ stacktrace45 | Last updated 05/7/2026 ]] --
 
 local repo = "https://raw.githubusercontent.com/LOL5678906/Obsidian/main/"
 local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
@@ -21,7 +27,7 @@ local Toggles = Library.Toggles
 --// Window \\--
 local Window = Library:CreateWindow({
     Title = "Wraith",
-    Footer = "Basketball Stars 3 | By stacktrace45 | Open source | Discord : discord.gg/NxbdayKh",
+    Footer = "Basketball Stars 3 | Open Source | By stacktrace45 | Discord : discord.gg/NxbdayKh",
     Icon = 14523252412,
     NotifySide = "Right",
     ShowCustomCursor = true,
@@ -974,6 +980,51 @@ MiscRight:AddToggle("AntiKnockback", {
     end
 })
 
+-- new stuff
+MiscRight:AddButton({
+    Text = "Stamina Drain (push on touch)",
+    Func = function()
+        local rep = game:GetService("ReplicatedStorage")
+        local plr = game.Players.LocalPlayer
+        local chr = plr.Character or plr.CharacterAdded:Wait()
+        local hit = chr:WaitForChild("hit")
+
+        local ev = rep:WaitForChild("BallEvent")
+
+        local old
+        old = hookfunction(ev.FireServer, function(self, ...)
+            local a = {...}
+
+            if a[2] == "push" and a[3] then
+                local t = a[3]
+
+                if t and t ~= plr then
+                    for i = 1, 5 do
+                        task.spawn(function()
+                            old(self, nil, "push", t)
+                        end)
+                    end
+                end
+            end
+
+            return old(self, ...)
+        end)
+
+        hit.Touched:Connect(function(p)
+            if p.Parent and p.Parent:FindFirstChild("Humanoid") then
+                local t = game.Players:GetPlayerFromCharacter(p.Parent)
+
+                if t and t ~= plr and t.Team ~= plr.Team then
+                    for i = 1, 3 do
+                        task.wait(0.1)
+                        ev:FireServer(nil, "push", t)
+                    end
+                end
+            end
+        end)
+    end
+})
+
 --//  \\--
 MiscRight:AddToggle("AntiAnkleBreaker", {
     Text = "Anti-Ankle Breaker",
@@ -1000,11 +1051,27 @@ local BadgesBox = Tabs.Misc:AddLeftGroupbox("Badges", "award")
 
 --// sets all badge upgrade costs to 0 so you can unlock them for free (requires badge points tho) \\--
 BadgesBox:AddButton({
-    Text = "Unlock Potential Badges",
+    Text = "Infinite Badge Levels",
     Func = function()
-        local m = require(ReplicatedStorage.Modules.Values)
-        for b in pairs(m.badgeUpgrades) do
-            m.badgeUpgrades[b] = 0
+        local rep = game:GetService("ReplicatedStorage")
+        local replicatedModules = rep:WaitForChild("Modules")
+        local functionsModule = require(replicatedModules:WaitForChild("Functions"))
+
+        local oldGetBadgeMaxLevel = functionsModule.getBadgeMaxLevel
+        functionsModule.getBadgeMaxLevel = function(badgeName, height, weight)
+            return 8
+        end
+
+        local oldGetBadgeLevel = functionsModule.getBadgeLevel
+        functionsModule.getBadgeLevel = function(points, badgeName, height, weight)
+            return 8, 8
+        end
+
+        local valuesModule = require(replicatedModules:WaitForChild("Values"))
+        if valuesModule.badgeUpgrades then
+            for badgeName, cost in pairs(valuesModule.badgeUpgrades) do
+                valuesModule.badgeUpgrades[badgeName] = 0
+            end
         end
     end
 })
@@ -1067,6 +1134,8 @@ MenuGroup:AddDropdown("NotificationSide", {
     end
 })
 
+
+
 MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", {Default = "RightShift", NoUI = true, Text = "Menu keybind"})
 
 MenuGroup:AddButton({
@@ -1090,7 +1159,7 @@ ThemeManager:ApplyToTab(Tabs["UI Settings"])
 
 --// random junk \\--
 local messages = {
-    "Script is now open-sourced on my GitHub. Happy skidding!"
+    "2 new features have been added!"
 }
 
 Library:Notify({
