@@ -1,4 +1,4 @@
--- [[ stacktrace45 | Last updated 05/7/2026 ]] --
+-- [[ stacktrace45 | Last updated 07/02/2026 ]] --
 
 local repo = "https://raw.githubusercontent.com/LOL5678906/Obsidian/main/"
 local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
@@ -34,9 +34,11 @@ local Tabs = {
     Movement = Window:AddTab("Movement", "zap"),
     Visuals = Window:AddTab("Visuals", "eye"),
     Misc = Window:AddTab("Misc", "menu"),
+    DribbleModifier = Window:AddTab("Dribble Modifier", "zap"),
     Info = Window:AddTab("Info", "info"),
     ["UI Settings"] = Window:AddTab("UI Settings", "settings"),
 }
+
 
 --// State \\--
 local autoTimeMethod = "Legit"
@@ -199,6 +201,31 @@ ShootingLeft:AddToggle("AutoTime", {
     end
 })
 
+ShootingLeft:AddToggle("AutoLayupReclutch", {
+    Text = "Auto Layup Reclutch",
+    Default = false,
+    Callback = function(v)
+        if v then
+            local inputFunc = filtergc("function", {
+                Name = "inputFunction",
+                Constants = {"shoot", "jump", "reclutch", "holdingBall", "shootBounce"}
+            }, true)
+
+            if not inputFunc then return end
+
+            local old
+            old = hookfunction(inputFunc, newcclosure(function(...)
+                local scriptValues = require(Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("BallValues"))
+                if Toggles.AutoLayupReclutch.Value then
+                    scriptValues.reclutch = true
+                end
+                return old(...)
+            end))
+        end
+    end
+})
+
+
 local ShootingRight = Tabs.Shooting:AddRightGroupbox("Shot Modifiers", "crosshair")
 
 --// Hides the shot meter \\--
@@ -289,6 +316,25 @@ DunkSettings:AddToggle("UnlimitedDunkRange", {
         end
     end
 })
+
+ShootingRight:AddButton({
+    Text = "Always Jumpshot State (NEW)",
+    Func = function()
+        local shootBallFunc = filtergc("function", {
+            Constants = {"Jumpshot", "dunk", "Layup", "LayupBackside", "Floater", "Heave"} -- others u can do
+        }, true)
+
+        if not shootBallFunc then return end
+
+        local old
+        old = hookfunction(shootBallFunc, newcclosure(function(...)
+            local args = {...}
+            args[1] = "shoot"
+            return old(table.unpack(args))
+        end))
+    end
+})
+
 
 --// Dunk Changer \\--
 local chr = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
@@ -786,6 +832,30 @@ StaminaBox:AddToggle("InfiniteStamina", {
     end
 })
 
+StaminaBox:AddButton({
+    Text = "Max Stamina Regen (More legit)",
+    Func = function()
+        local playerScripts = Players.LocalPlayer:WaitForChild("PlayerScripts")
+        local scriptValues = require(playerScripts:WaitForChild("BallValues"))
+
+        local mainFunc = filtergc("function", {
+            Constants = {"regenLevel"},
+            IgnoreExecutor = true
+        }, true)
+
+        if mainFunc then
+            local upvalues = debug.getupvalues(mainFunc)
+            for i, v in pairs(upvalues) do
+                if type(v) == "number" and v == 0 then
+                    debug.setupvalue(mainFunc, i, 100)
+                    break
+                end
+            end
+        end
+    end
+})
+
+
 --// Visuals Tab \\--
 local replicatedModules = ReplicatedStorage:WaitForChild("Modules")
 local clothingList = require(replicatedModules:WaitForChild("ClothingList"))
@@ -974,6 +1044,44 @@ MiscRight:AddToggle("AntiKnockback", {
     end
 })
 
+local DribbleRight = Tabs.DribbleModifier:AddRightGroupbox("Utilities")
+
+DribbleRight:AddButton({
+    Text = "Unlock All Dribble Moves",
+    Func = function()
+        local valuesModule = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Values"))
+
+        local function safeWrite(tbl, key, value)
+            local success = pcall(function()
+                tbl[key] = value
+            end)
+            if not success then
+                makewritable(tbl)
+                tbl[key] = value
+            end
+        end
+
+        for _, move in {
+            "c", "z", "cc", "zz", "cx", "zx",
+            "cxc", "zxz", "cxz", "zxc",
+            "xz", "xc", "x", "xx", "v"
+        } do
+            safeWrite(valuesModule.crossovers, move, move)
+        end
+
+        local getVFunc = filtergc("function", {
+            Name = "getV"
+        }, true)
+
+        if getVFunc then
+            hookfunction(getVFunc, newcclosure(function(...)
+                return 9999
+            end))
+        end
+    end
+})
+
+
 -- new stuff
 MiscRight:AddButton({
     Text = "Stamina Drain (push on touch)",
@@ -1094,6 +1202,64 @@ for id, name in pairs(tp) do
     })
 end
 
+local DribbleLeft = Tabs.DribbleModifier:AddLeftGroupbox("Moves (Max allowed : 1)")
+
+local moves = {
+    "Cross", "Hezi", "BehindDouble", "Crossover",
+    "CrossoverBehind", "Spin", "BTBPickup",
+    "StepbackSwitch", "Stepback", "StepbackBetween", "Switch"
+}
+
+local selectedMove = "BTBPickup"
+local moveChance = 100
+
+DribbleLeft:AddDropdown("DribbleMoveSelect", {
+    Values = moves,
+    Default = "BTBPickup",
+    Text = "Dribble Move",
+    Callback = function(v)
+        selectedMove = v
+    end
+})
+
+DribbleLeft:AddSlider("DribbleMoveChance", {
+    Text = "Chance of doing that move %",
+    Default = 100,
+    Min = 1,
+    Max = 100,
+    Rounding = 0,
+    Callback = function(v)
+        moveChance = v
+    end
+})
+
+DribbleLeft:AddToggle("DribbleModifierEnabled", {
+    Text = "Enable Dribble Modifier",
+    Default = false,
+})
+
+local executeFunc = filtergc("function", {
+    Name = "execute",
+    Constants = {"Handle", "Spin", "CrossoverBehind", "Stepback", "BTBPickup"}
+}, true)
+
+if executeFunc then
+    local old
+    old = hookfunction(executeFunc, newcclosure(function(...)
+        local args = {...}
+        if args[1] == "shoot" or args[1] == "pass" or args[1] == "drop" or args[1] == "steal" or args[1] == "jump" or args[1] == "ability" then
+            return old(table.unpack(args))
+        end
+
+        if Toggles.DribbleModifierEnabled.Value and math.random(1, 100) <= moveChance then
+            args[1] = "Handle"
+            args[2] = selectedMove
+        end
+
+        return old(table.unpack(args))
+    end))
+end
+
 --// Info Tab \\--
 local InfoBox = Tabs.Info:AddLeftGroupbox("System Info", "info")
 
@@ -1140,6 +1306,7 @@ MenuGroup:AddButton({
 })
 
 Library.ToggleKeybind = Options.MenuKeybind
+
 
 --// Theme + Save setup \\--
 ThemeManager:SetLibrary(Library)
