@@ -1,587 +1,69 @@
-
-ActivateCameraController
-ActivateOcclusionModule
-Angles
-ApplyVRTransform
-AssertTypes
-BindContextActions
-Black
-Blue
-CachePartsRecursive
-CalculateNewLookCFrameFromArg
-CalculateNewLookVector
-CalculateNewLookVectorFromArg
-CalculateNewLookVectorVRFromArg
-CancelFailureAnimation
-CharacterAdded
-CharacterOutlineBehavior
-CharacterRemoving
-CheckTorsoReference
-CircleBehavior
-Cleanup
-CleanupPath
-ComputeSteer
-ComputeThrottle
-Connect
-ConnectFocusEventListeners
-ConnectGamepadConnectionListeners
-ConvertCameraModeEnumToStandard
-CornerBehavior
-Create
-CreateEndWaypoint
-CreatePathDisplay
-CreateTouchGuiContainer
-CreateTween
-CreateWaypointTemplates
-DarkGray
-Delay
-Destroy
-Disable
-Disconnect
-DisconnectEvents
-DisconnectGamepadConnectionListeners
-DisplayFailureWaypoint
-DoFadeInBackground
-DoMouseLockSwitch
-DoMove
-ElapsedTime
-Enable
-EnableButton
-EnableMouseLock
-EnterFirstPerson
-FadeThumbstick
-FadeThumbstickFrame
-FindCharacterAncestor
-FromAxis
-FromNormalId
-GamepadLinearToCurve
-GamepadReset
-GamepadZoomPress
-GetActiveController
-GetAgentSizeIncreaseFactor
-GetAngleBetweenXZVectors
-GetAvatarFeetWorldYValue
-GetBindableToggleEvent
-GetBodyPartToFollow
-GetCameraHeight
-GetCameraLookVector
-GetCameraMovementMode
-GetCameraMovementModeFromSettings
-GetCameraToSubjectDistance
-GetCameraToggleOffset
-GetCameraType
-GetCameras
-GetClickToMoveController
-GetControls
-GetEnabled
-GetEndWaypointTexture
-GetEquippedTool
-GetEstimatedVRTorsoFrame
-GetFailureAnimationEnabled
-GetHighestPriorityGamepad
-GetHumanoid
-GetHumanoidPartToFollow
-GetHumanoidRootPart
-GetIgnoredPartsTag
-GetIsJumping
-GetIsMouseLocked
-GetMeasuredDistanceToFocus
-GetModuleName
-GetMouseLockOffset
-GetMoveVector
-GetObscuredParts
-GetOcclusionMode
-GetService
-GetShowPath
-GetSubjectCFrame
-GetSubjectPosition
-GetSubjectRotVelocity
-GetSubjectVelocity
-GetUnreachableWaypointTimeout
-GetUseDirectPath
-GetUserJumpEnabled
-GetVRFocus
-GetWaypointRadius
-GetWaypointTexture
-GetWaypointsAlwaysOnTop
-GetZoomRadius
-Gray
-Green
-HandleMoveTo
-HasToolAncestor
-Hide
-InFirstPerson
-InputInFrame
-InputTranslationToCameraAngleChange
-IsFinite
-IsFiniteVector3
-IsInFirstPerson
-IsMouseLocked
-IsMoveVectorCameraRelative
-IsValidPartToModify
-JUST_PLAY_THE_GAME
-LayoutMiddleImages
-LeaveFirstPerson
-LimbBehavior
-LimbMoveBehavior
-LoadNumberValueParameters
-LoadOrCreateNumberValueParameter
-Move
-MoveBehavior
-MoveStick
-MoveTo
-New
-NewDisplayModel
-NormalizeAngle
-OnBoundKeysObjectChanged
-OnCameraSubjectChanged
-OnCameraTypeChanged
-OnCharacterAdded
-OnCharacterRemoving
-OnCurrentCameraChanged
-OnCurrentGamepadDisconnected
-OnEnabledChanged
-OnHeadScaleChanged
-OnHumanoidSeated
-OnInputEnded
-OnLocalPlayerCameraPropertyChanged
-OnMouseLockToggled
-OnNewCameraSubject
-OnNewGamepadConnected
-OnPlayerAdded
-OnPlayerCameraPropertyChange
-OnPlayerRemoving
-OnPreferredInputChanged
-OnRenderStepped
-OnSteerLeft
-OnSteerRight
-OnTap
-OnThrottleAccel
-OnThrottleDeccel
-OnTouchBegan
-OnTouchChanged
-OnTouchEnded
-OnUserGameSettingsPropertyChanged
-Pather
-PlayFailureAnimation
-PluginManager
-Popper
-Random
-RayIntersection
-Raycast
-Red
-ReleaseSpring
-Reset
-ResetZoom
-RotateVectorByAngleAndRound
-Round
-RunFailureTween
-SelectComputerMovementModule
-SelectTouchModule
-SetAgentSizeIncreaseFactor
-SetAndBoundsCheckAzimuthValues
-SetAndBoundsCheckDistanceValues
-SetAndBoundsCheckElevationValues
-SetCameraMovementMode
-SetCameraToSubjectDistance
-SetCameraType
-SetEndWaypointTexture
-SetFailureAnimationEnabled
-SetIgnoredPartsTag
-SetInitialOrientation
-SetIsMouseLocked
-SetMode
-SetMouseLockOffset
-SetShowPath
-SetSubject
-SetUnreachableWaypointTimeout
-SetUseDirectPath
-SetUserJumpEnabled
-SetWaypointRadius
-SetWaypointTexture
-SetWaypointsAlwaysOnTop
-SetZoomParameters
-SetupAutoPilot
-SetupTransparency
-ShouldUseVehicleCamera
-SmartCircleBehavior
-Spawn
-Start
-StartFadeFromBlack
-StartVREdgeBlur
-Stats
-Step
-StepZoom
-Stop
-SwitchToController
-TWEEN_COLOR
-TeardownTransparency
-TweenInFrom
-UnbindContextActions
-Update
-UpdateActiveControlModuleEnabled
-UpdateComfortCamera
-UpdateEdgeBlur
-UpdateEnabled
-UpdateFadeFromBlack
-UpdateFirstPersonTransform
-UpdateForDistancePropertyChange
-UpdateIgnoreTag
-UpdateImmersionCamera
-UpdateJump
-UpdateMouseBehavior
-UpdateMouseLockAvailability
-UpdateMovement
-UpdateMovementMode
-UpdateRotationCamera
-UpdateStepRotation
-UpdateThirdPersonComfortTransform
-UpdateThirdPersonFollowTransform
-UpdateTouchGuiVisibility
-UserSettings
-Version
-WHY_ARE_YOU_CHECKING_THIS
-Wait
-White
-Yellow
-_GetFirstPersonLocalOffset
-_GetThirdPersonLocalOffset
-_StepRotation
-__call
-_connectCallbacks
-_getOrCreateBoundEvent
-_reset
-_setUpConfigurations
-_setupConfigurations
-_startBoundFn
-_stopBoundFn
-abs
-acos
-addDrift
-adjustTouchPitchSensitivity
-angle
-animateTool
-arshift
-asin
-assert
-atan
-atan2
-band
-bindRoot
-bnot
-bor
-btest
-bxor
-byte
-byteswap
-calculateRawMoveVector
-cancel
-ceil
-char
-characterAdded
-characterRemoving
-clamp
-clear
-clock
-clone
-cloneAndFreeze
-close
-codepoint
-codes
-collectgarbage
-concat
-configureAnimationSet
-copy
-cos
-cosh
-countlz
-countrz
-create
-createTrailDots
-cross
-date
-defer
-deg
-delay
-destroy
-desynchronize
-difftime
-disableCameraToggleInput
-disconnect
-disconnectAll
-dot
-dumpcodesize
-dumpheap
-dumprefs
-elapsedTime
-enableCameraToggleInput
-error
-exp
-extract
-extrapolate
-fill
-find
-floor
-fmod
-foreach
-foreachi
-format
-freeze
-frexp
-fromAssetId
-fromAxis
-fromAxisAngle
-fromCurrent
-fromEnum
-fromEulerAngles
-fromEulerAnglesXYZ
-fromEulerAnglesYXZ
-fromExisting
-fromHSV
-fromHex
-fromId
-fromIsoDate
-fromLocalTime
-fromMatrix
-fromName
-fromNormalId
-fromObject
-fromOffset
-fromOrientation
-fromRGB
-fromRotationBetweenVectors
-fromScale
-fromUniversalTime
-fromUnixTimestamp
-fromUnixTimestampMillis
-fromUri
-fromstring
-gamepadReset
-gamepadZoomPress
-gcinfo
-getCFrame
-getCamera
-getCharacter
-getChild
-getCollidableExtentsSize
-getCollisionPoint
-getGamepadRightThumbstickPosition
-getHoldPan
-getInputEnabled
-getLocalPlayer
-getLooseBoundingSphere
-getNextMovement
-getPanning
-getRelativeVelocity
-getRigScale
-getRotation
-getRotationActivated
-getTogglePan
-getTool
-getToolAnim
-getUserFlag
-getZoomDelta
-getfenv
-getmemorycategory
-getmetatable
-getn
-gmatch
-graphemes
-gsub
-increment
-info
-initializeSoundSystem
-inputBegan
-inputChanged
-inputEnded
-insert
-ipairs
-isFrozen
-isInDynamicThumbstickArea
-isfrozen
-isyieldable
-keyFrameReachedFunc
-keypress
-ldexp
-len
-lerp
-loadmodule
-loadstring
-log
-log10
-lookAlong
-lookAt
-lower
-lrotate
-lshift
-magnitude
-map
-mapClamp
-match
-max
-maxn
-min
-modf
-move
-moveSit
-new
-newPhysicalPropertiesWithClampedMsgClosure
-newproxy
-next
-nfcnormalize
-nfdnormalize
-noise
-normalize
-now
-offset
-onAxis
-onCharacter
-onChild
-onClimbing
-onDeselected
-onDied
-onFallingDown
-onFocusReleased
-onFreeFall
-onGettingUp
-onJumping
-onLocalPlayer
-onPlatformStanding
-onRunning
-onSeated
-onSelected
-onSwimming
-onTextFocusGained
-pack
-packsize
-pairs
-palette
-parsePath
-pcall
-placePathWaypoint
-playAnimation
-playToolAnimation
-playerAdded
-playerRemoving
-pointerAction
-pow
-print
-printidentity
-processAddChild
-processDeleteChild
-processNode
-profilebegin
-profileend
-queryPoint
-queryViewport
-rad
-random
-randomseed
-rawequal
-rawget
-rawlen
-rawset
-readbits
-readf32
-readf64
-readi16
-readi32
-readi8
-readstring
-readu16
-readu32
-readu8
-remove
-rep
-replace
-require
-resetInputDevices
-resetInputForFrameEnd
-resetTouchState
-resetmemorycategory
-restoreMouseBehavior
-restoreMouseIcon
-restoreRotationType
-resume
-reverse
-round
-rrotate
-rshift
-running
-sanitizeAngle
-scriptChildModified
-select
-setAnimationSpeed
-setCameraModeToastEnabled
-setCameraModeToastOpen
-setGoal
-setInputEnabled
-setMouseBehaviorOverride
-setMouseIconOverride
-setRotationTypeOverride
-setTogglePan
-setTransform
-setfenv
-setmemorycategory
-setmetatable
-settings
-sign
-sin
-sinh
-size
-sort
-spawn
-split
-sqrt
-stats
-status
-step
-stopAllAnimations
-stopPlayingLoopedSounds
-stopToolAnimations
-sub
-synchronize
-tan
-tanh
-terminate
-testPromotion
-thumbstick
-thumbstickCurve
-tick
-time
-toHSV
-tonumber
-toolKeyFrameReachedFunc
-tostring
-touchBegan
-touchChanged
-touchEnded
-traceback
-trackBoundFunction
-trackConnection
-type
-typeof
-unbindNodeDescend
-unbindRoot
-unpack
-update
-updateBounds
-updateProjection
-updateVRMoveVector
-upper
-version
-wait
-warn
-wrap
-writebits
-writef32
-writef64
-writei16
-writei32
-writei8
-writestring
-writeu16
-writeu32
-writeu8
-xpcall
-yield
+"updateRecord","MouseEnter","MouseLeave","processDeleteChild","processNode","extrapolate","staggeredCallback",
+    "updateBorderSize","totalChildrenChanged","nowSetIt","terminate","stopPlayingLoopedSounds","processAddChild",
+    "viewingEnded","viewingStarted","onTextFocusGained","CreateTouchGuiContainer","Enable","BindContextActions",
+    "new","Create","SetupCharacterAddedFunction","HumanoidChanged","GetUnreachableWaypointTimeout",
+    "SetUnreachableWaypointTimeout","GetAgentSizeIncreaseFactor","SetAgentSizeIncreaseFactor","GetUseDirectPath",
+    "SetUseDirectPath","GetIgnoredPartsTag","GetFailureAnimationEnabled","PressButton","SetFailureAnimationEnabled",
+    "GetShowPath","SetShowPath","OnRenderStepped","GetWaypointsAlwaysOnTop","GetEndWaypointTexture",
+    "GetWaypointRadius","GetWaypointTexture","CancelFailureAnimation","CreateEndWaypoint","TweenInFrom",
+    "SetIgnoredPartsTag","SetWaypointsAlwaysOnTop","SetEndWaypointTexture","SetWaypointRadius","SetWaypointTexture",
+    "FindCharacterAncestor","DoFadeInBackground","UnbindContextActions","LayoutMiddleImages",
+    "ConnectGamepadConnectionListeners","OnNewGamepadConnected","UpdateMovement","UpdateTouchGuiVisibility",
+    "OnHumanoidSeated","updateVRMoveVector","getGamepadRightThumbstickPosition","GetEstimatedVRTorsoFrame",
+    "onFocusReleased","OnLastInputTypeChanged","EnableButton","DisplayFailureWaypoint","NewDisplayModel",
+    "createTrailDots","CreateTween","placePathWaypoint","OnCurrentGamepadDisconnected","GetHighestPriorityGamepad",
+    "GetClickToMoveController","UpdateMouseLockAvailability","Update","EnableMouseLock","OnMouseLockToggled",
+    "GetMouseLockOffset","Step","__call","SmartCircleBehavior","CircleBehavior","CornerBehavior",
+    "_GetFirstPersonLocalOffset","_GetThirdPersonLocalOffset","GetSubjectPosition","GetSubjectCFrame",
+    "UpdateFadeFromBlack","OnCurrentCameraChanged","ResetZoom","GamepadZoomPress","LeaveFirstPerson",
+    "UpdateFirstPersonTransform","Reset","setGoal","SetCameraToSubjectDistance","SetInitialOrientation",
+    "ReleaseSpring","SetupAutoPilot","ComputeSteer","ComputeThrottle","OnSteerLeft","OnSteerRight",
+    "OnThrottleDeccel","OnThrottleAccel","CharacterAdded","HumanoidStateEnabledChanged","UpdateEnabled",
+    "Destroy","Hide","GetUserJumpEnabled","SetUserJumpEnabled","UpdateJump","Stop","Start","OnTouchEnded",
+    "OnTouchChanged","OnTouchBegan","DisconnectEvents","GetEquippedTool","getCollidableExtentsSize",
+    "OnInputEnded","MoveStick","DoMove","InputInFrame","FadeThumbstickFrame","GetIsJumping",
+    "DisconnectGamepadConnectionListeners","disconnectAll","disconnect","connectManual","connect",
+    "IsMoveVectorCameraRelative","GetMoveVector","DisconnectFocusEventListeners","OnTouchMovementModeChange",
+    "OnComputerMovementModeChange","OnCharacterRemoving","OnCharacterAdded","Disable","GetActiveController",
+    "IsMouseLocked","DoMouseLockSwitch","OnBoundKeysObjectChanged","GetBindableToggleEvent","GetIsMouseLocked",
+    "SetSubject","SetupTransparency","TeardownTransparency","CachePartsRecursive","IsValidPartToModify",
+    "HasToolAncestor","OnCameraSubjectChanged","CharacterRemoving","GetOcclusionMode","Cleanup",
+    "GetObscuredParts","CheckTorsoReference","CharacterOutlineBehavior","LimbMoveBehavior","MoveBehavior",
+    "LimbBehavior","RayIntersection","AssertTypes","NormalizeAngle","GetCameraHeight","UpdateEdgeBlur",
+    "GetVRFocus","OnHeadScaleChanged","GamepadReset","GetModuleName","GetAvatarFeetWorldYValue","setTransform",
+    "step","getCFrame","ApplyVRTransform","CalculateNewLookVector","GetCameraToSubjectDistance",
+    "LoadNumberValueParameters","SetAndBoundsCheckDistanceValues","SetAndBoundsCheckElevationValues",
+    "SetAndBoundsCheckAzimuthValues","LoadOrCreateNumberValueParameter","IsInFirstPerson","OnNewCameraSubject",
+    "GetHumanoidPartToFollow","CalculateNewLookVectorVRFromArg","CalculateNewLookVectorFromArg",
+    "CalculateNewLookCFrameFromArg","GetCameraLookVector","GetMeasuredDistanceToFocus","enableCameraToggleInput",
+    "setInputEnabled","SwitchToController","HandleMoveTo","UpdateIgnoreTag","OnEnabledChanged","resetInputDevices",
+    "RunFailureTween","SelectTouchModule","UpdateComfortCamera","UpdateStepRotation","_StepRotation","Popper",
+    "queryPoint","testPromotion","touchChanged","touchEnded","touchBegan","GetCameraControlChoice",
+    "ActivateOcclusionModule","GetCameraMovementModeFromSettings","SetMode","UpdateRotationCamera","addDrift",
+    "StartFadeFromBlack","UpdateThirdPersonFollowTransform","UpdateThirdPersonComfortTransform",
+    "UpdateImmersionCamera","setCameraModeToastOpen","setCameraModeToastEnabled","SetZoomParameters",
+    "getCollisionPoint","playerRemoving","playerAdded","OnGameSettingsTouchMovementModeChanged","StepZoom",
+    "GetCameraToggleOffset","getPanning","inputEnded","inputChanged","inputBegan","thumbstick",
+    "getRotationActivated","resetInputForFrameEnd","OnLocalPlayerCameraPropertyChanged","OnCameraTypeChanged",
+    "SelectComputerMovementModule","UpdateActiveControlModuleEnabled","ActivateCameraController","GetZoomRadius",
+    "GetHumanoid","OnDevTouchMovementModeChanged","OnDynamicThumbstickEnabled","OnViewportSizeChanged",
+    "GetHumanoidRootPart","SetCameraMovementMode","setTogglePan","getTogglePan","getHoldPan","getInputEnabled",
+    "pointerAction","gamepadReset","gamepadZoomPress","keypress","isInDynamicThumbstickArea","IsFiniteVector3",
+    "OnUserGameSettingsPropertyChanged","EnterFirstPerson","InFirstPerson","SetMouseLockOffset","SetIsMouseLocked",
+    "GetCameraMovementMode","GetCameraType","SetCameraType","UpdateForDistancePropertyChange","GetEnabled",
+    "InputTranslationToCameraAngleChange","OnPlayerCameraPropertyChange","OnDynamicThumbstickDisabled",
+    "GetSubjectRotVelocity","GetSubjectVelocity","GetBodyPartToFollow","getUserFlag","adjustTouchPitchSensitivity",
+    "thumbstickCurve","ConvertCameraModeEnumToStandard","GamepadLinearToCurve","RotateVectorByAngleAndRound",
+    "GetAngleBetweenXZVectors","IsFinite","Round","sanitizeAngle","getLooseBoundingSphere","mapClamp","map",
+    "onAxis","OnPlayerAdded","ShouldUseVehicleCamera","CleanupPath","PlayFailureAnimation","MoveTo","Raycast",
+    "FadeThumbstick","ConnectFocusEventListeners","calculateRawMoveVector","getRotation","StartVREdgeBlur",
+    "updateBounds","characterRemoving","characterAdded","disableCameraToggleInput","getZoomDelta",
+    "restoreRotationType","setRotationTypeOverride","restoreMouseBehavior","setMouseBehaviorOverride",
+    "restoreMouseIcon","setMouseIconOverride","CreatePathDisplay","queryViewport","updateProjection",
+    "UpdateMouseBehavior","resetTouchState","CreateWaypointTemplates","Pather","handleLabelAndImageChangesUnstaggered",
+    "getItemWidth","OnInputBegan","move","onSwimming","onPlatformStanding","onSeated","onFallingDown",
+    "onGettingUp","onDied","getToolAnim","getTool","scriptChildModified","configureAnimationSet","onClimbing",
+    "stopToolAnimations","keyFrameReachedFunc","moveSit","playAnimation","animateTool","toolKeyFrameReachedFunc",
+    "setAnimationSpeed","getRigScale","getTools","initializeSoundSystem","getRelativeVelocity","getWidth",
+    "statesMatch","getModifications","getClippedClone","getRealInstance","getInstanceValue","getThemeValue",
+    "joinFeature","getClippedContainer","formatStateName","reverseTable","round","createStagger","__tostring"
