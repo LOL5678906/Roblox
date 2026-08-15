@@ -1,9 +1,6 @@
--- [[ stacktrace45 | Last updated 07/02/2026 ]] --
+-- [[ scriptalua | Last updated 08/15/2026 ]] --
 
-local repo = "https://raw.githubusercontent.com/LOL5678906/Obsidian/main/"
-local Library = loadstring(game:HttpGet(repo .. "Library.lua"))()
-local ThemeManager = loadstring(game:HttpGet(repo .. "addons/ThemeManager.lua"))()
-local SaveManager = loadstring(game:HttpGet(repo .. "addons/SaveManager.lua"))()
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/gen2"))()
 
 --// Services \\--
 local Players = cloneref(game:GetService("Players"))
@@ -14,35 +11,55 @@ local UserInputService = cloneref(game:GetService("UserInputService"))
 local TeleportService = cloneref(game:GetService("TeleportService"))
 local VirtualInputManager = cloneref(game:GetService("VirtualInputManager"))
 
---// Lib stuff \\--
-local Options = Library.Options
-local Toggles = Library.Toggles
+local DarkTheme = {
+    WindowColor = ColorSequence.new(Color3.fromRGB(16, 16, 20), Color3.fromRGB(22, 22, 28)),
+    ShadowColor = Color3.fromRGB(0, 0, 0),
+    SurfaceStroke = Color3.fromRGB(38, 38, 48),
+    TitlingColor = Color3.fromRGB(240, 240, 245),
+    ContentColor = Color3.fromRGB(175, 175, 190),
+    ElementTextHoverColor = Color3.fromRGB(255, 255, 255),
+    ActionColor = Color3.fromRGB(200, 200, 215),
+    TabColor = Color3.fromRGB(240, 240, 250),
+    TabBackground = ColorSequence.new(Color3.fromRGB(28, 28, 36), Color3.fromRGB(20, 20, 26)),
+    TabStroke = ColorSequence.new(Color3.fromRGB(50, 50, 65), Color3.fromRGB(35, 35, 48)),
+    ElementGradient = ColorSequence.new(Color3.fromRGB(24, 24, 30), Color3.fromRGB(18, 18, 24)),
+    ElementStroke = Color3.fromRGB(38, 38, 48),
+    ElementStrokeHover = Color3.fromRGB(65, 65, 82),
+    AccentColor = Color3.fromRGB(90, 130, 255),
+    AccentStroke = Color3.fromRGB(110, 150, 255),
+    ToggleTrack = Color3.fromRGB(28, 28, 36),
+    ToggleKnobOff = Color3.fromRGB(110, 110, 125),
+    SliderBackground = Color3.fromRGB(26, 26, 34),
+    SliderProgress = ColorSequence.new(Color3.fromRGB(90, 130, 255), Color3.fromRGB(70, 110, 235)),
+    SliderHandle = Color3.fromRGB(240, 240, 255),
+    SliderStroke = Color3.fromRGB(45, 45, 60),
+    DropdownHighlight = Color3.fromRGB(36, 36, 48),
+    FieldBackground = Color3.fromRGB(22, 22, 28),
+    PlaceholderColor = Color3.fromRGB(110, 110, 130)
+}
 
 --// Window \\--
-local Window = Library:CreateWindow({
-    Title = "Wraith",
-    Footer = "Basketball Stars 3 | Open Source | By stacktrace45 | Discord : discord.gg/NxbdayKh",
-    Icon = 14523252412,
-    NotifySide = "Right",
-    ShowCustomCursor = true,
+local Window = Rayfield:CreateWindow({
+    name = "SL",
+    subtitle = "Basketball Stars 3 | Open Source | By scriptalua",
+    theme = DarkTheme
 })
 
 --// Tabs \\--
 local Tabs = {
-    Shooting = Window:AddTab("Shooting", "target"),
-    Defense = Window:AddTab("Defense", "shield"),
-    Movement = Window:AddTab("Movement", "zap"),
-    Visuals = Window:AddTab("Visuals", "eye"),
-    Misc = Window:AddTab("Misc", "menu"),
-    DribbleModifier = Window:AddTab("Dribble Modifier", "zap"),
-    Info = Window:AddTab("Info", "info"),
-    ["UI Settings"] = Window:AddTab("UI Settings", "settings"),
+    Shooting = Window:CreateTab({ name = "Shooting", icon = "target" }),
+    Defense = Window:CreateTab({ name = "Defense", icon = "shield" }),
+    Movement = Window:CreateTab({ name = "Movement", icon = "zap" }),
+    Visuals = Window:CreateTab({ name = "Visuals", icon = "eye" }),
+    Misc = Window:CreateTab({ name = "Misc", icon = "menu" }),
+    DribbleModifier = Window:CreateTab({ name = "Dribble Modifier", icon = "zap" }),
+    Info = Window:CreateTab({ name = "Info", icon = "info" })
 }
-
 
 --// State \\--
 local autoTimeMethod = "Legit"
 local autoTimeEnabled = false
+local autoLayupReclutchEnabled = false
 local dunkChangerEnabled = false
 local dunkAnimation = "Behind"
 local autoStealEnabled = false
@@ -160,18 +177,18 @@ local function setupVisual()
 end
 
 --// Shooting Tab \\--
-local ShootingLeft = Tabs.Shooting:AddLeftGroupbox("Auto Time", "target")
+Tabs.Shooting:CreateSection({ name = "Auto Time" })
 
-ShootingLeft:AddDropdown("AutoTimeMethod", {
-    Values = {"Legit", "No Bar", "Auto Bar"},
-    Default = autoTimeMethod,
-    Text = "Auto Time Method",
-    Callback = function(v)
-        autoTimeMethod = v
+Tabs.Shooting:CreateDropdown({
+    name = "Auto Time Method",
+    options = {"Legit", "No Bar", "Auto Bar"},
+    value = autoTimeMethod,
+    callback = function(v)
+        autoTimeMethod = typeof(v) == "table" and v[1] or v
         if autoTimeEnabled then
-            if v == "Legit" then
+            if autoTimeMethod == "Legit" then
                 setupTween()
-            elseif v == "No Bar" then
+            elseif autoTimeMethod == "No Bar" then
                 setupNamecall()
             else
                 setupVisual()
@@ -180,10 +197,10 @@ ShootingLeft:AddDropdown("AutoTimeMethod", {
     end
 })
 
-ShootingLeft:AddToggle("AutoTime", {
-    Text = "Auto Time",
-    Default = autoTimeEnabled,
-    Callback = function(v)
+Tabs.Shooting:CreateToggle({
+    name = "Auto Time",
+    value = autoTimeEnabled,
+    callback = function(v)
         autoTimeEnabled = v
         if v then
             if autoTimeMethod == "Legit" then
@@ -201,10 +218,11 @@ ShootingLeft:AddToggle("AutoTime", {
     end
 })
 
-ShootingLeft:AddToggle("AutoLayupReclutch", {
-    Text = "Auto Layup Reclutch",
-    Default = false,
-    Callback = function(v)
+Tabs.Shooting:CreateToggle({
+    name = "Auto Layup Reclutch",
+    value = false,
+    callback = function(v)
+        autoLayupReclutchEnabled = v
         if v then
             local inputFunc = filtergc("function", {
                 Name = "inputFunction",
@@ -216,7 +234,7 @@ ShootingLeft:AddToggle("AutoLayupReclutch", {
             local old
             old = hookfunction(inputFunc, newcclosure(function(...)
                 local scriptValues = require(Players.LocalPlayer:WaitForChild("PlayerScripts"):WaitForChild("BallValues"))
-                if Toggles.AutoLayupReclutch.Value then
+                if autoLayupReclutchEnabled then
                     scriptValues.reclutch = true
                 end
                 return old(...)
@@ -225,13 +243,12 @@ ShootingLeft:AddToggle("AutoLayupReclutch", {
     end
 })
 
-
-local ShootingRight = Tabs.Shooting:AddRightGroupbox("Shot Modifiers", "crosshair")
+Tabs.Shooting:CreateSection({ name = "Shot Modifiers" })
 
 --// Hides the shot meter \\--
-ShootingRight:AddButton({
-    Text = "No Shot Meter",
-    Func = function()
+Tabs.Shooting:CreateButton({
+    name = "No Shot Meter",
+    callback = function()
         local sg = Players.LocalPlayer.Character.HumanoidRootPart:WaitForChild("ShootingGui")
         sg.Enabled = false
         sg:GetPropertyChangedSignal("Enabled"):Connect(function()
@@ -243,9 +260,9 @@ ShootingRight:AddButton({
 })
 
 --// Makes moving shots easier ( Credit: SeymourButtsIsAPeepingTom ) luraph causes this to crash \\--
-ShootingRight:AddButton({
-    Text = "Easier Moving Shots",
-    Func = function()
+Tabs.Shooting:CreateButton({
+    name = "Easier Moving Shots",
+    callback = function()
         local old
         old = hookmetamethod(game, "__namecall", function(self, ...)
             local args = {...}
@@ -265,9 +282,9 @@ ShootingRight:AddButton({
 })
 
 --// High arc \\--
-ShootingRight:AddButton({
-    Text = "High Shot Arc",
-    Func = function()
+Tabs.Shooting:CreateButton({
+    name = "High Shot Arc",
+    callback = function()
         local mt = getrawmetatable(game)
         setreadonly(mt, false)
         local nc = mt.__namecall
@@ -282,44 +299,9 @@ ShootingRight:AddButton({
     end
 })
 
---// Dunk Settings \\--
-local DunkSettings = Tabs.Shooting:AddLeftGroupbox("Dunk Settings", "zap")
-
-DunkSettings:AddToggle("DunkChanger", {
-    Text = "Dunk Changer",
-    Default = dunkChangerEnabled,
-    Callback = function(v)
-        dunkChangerEnabled = v
-    end
-})
-
-DunkSettings:AddDropdown("DunkAnimation", {
-    Values = {"2 Hand", "Tomahawk", "1 Hand", "Windmill", "Between", "Behind", "180", "Under", "360"},
-    Default = dunkAnimation,
-    Text = "Dunk Animation",
-    Callback = function(v)
-        dunkAnimation = v
-    end
-})
-
---// patch dunk range \\--
-DunkSettings:AddToggle("UnlimitedDunkRange", {
-    Text = "Unlimited Dunk Range",
-    Default = false,
-    Callback = function(v)
-        local f = require(ReplicatedStorage.Modules.Functions).magXZ
-        local c = debug.getconstants(f)
-        for i, val in c do
-            if val == "X" or val == "Z" or val == "Y" then
-                debug.setconstant(f, i, v and "Y" or (val == "Y" and (i % 2 == 0 and "Z" or "X") or val))
-            end
-        end
-    end
-})
-
-ShootingRight:AddButton({
-    Text = "Always Jumpshot State (NEW)",
-    Func = function()
+Tabs.Shooting:CreateButton({
+    name = "Always Jumpshot State (NEW)",
+    callback = function()
         local shootBallFunc = filtergc("function", {
             Constants = {"Jumpshot", "dunk", "Layup", "LayupBackside", "Floater", "Heave"} -- others u can do
         }, true)
@@ -335,6 +317,40 @@ ShootingRight:AddButton({
     end
 })
 
+--// Dunk Settings \\--
+Tabs.Shooting:CreateSection({ name = "Dunk Settings" })
+
+Tabs.Shooting:CreateToggle({
+    name = "Dunk Changer",
+    value = dunkChangerEnabled,
+    callback = function(v)
+        dunkChangerEnabled = v
+    end
+})
+
+Tabs.Shooting:CreateDropdown({
+    name = "Dunk Animation",
+    options = {"2 Hand", "Tomahawk", "1 Hand", "Windmill", "Between", "Behind", "180", "Under", "360"},
+    value = dunkAnimation,
+    callback = function(v)
+        dunkAnimation = typeof(v) == "table" and v[1] or v
+    end
+})
+
+--// patch dunk range \\--
+Tabs.Shooting:CreateToggle({
+    name = "Unlimited Dunk Range",
+    value = false,
+    callback = function(v)
+        local f = require(ReplicatedStorage.Modules.Functions).magXZ
+        local c = debug.getconstants(f)
+        for i, val in c do
+            if val == "X" or val == "Z" or val == "Y" then
+                debug.setconstant(f, i, v and "Y" or (val == "Y" and (i % 2 == 0 and "Z" or "X") or val))
+            end
+        end
+    end
+})
 
 --// Dunk Changer \\--
 local chr = Players.LocalPlayer.Character or Players.LocalPlayer.CharacterAdded:Wait()
@@ -373,12 +389,12 @@ RunService.Heartbeat:Connect(function()
 end)
 
 --// Defense Tab \\--
-local DefenseLeft = Tabs.Defense:AddLeftGroupbox("Defense", "shield")
+Tabs.Defense:CreateSection({ name = "Auto Steal" })
 
-DefenseLeft:AddToggle("AutoSteal", {
-    Text = "Auto Steal",
-    Default = autoStealEnabled,
-    Callback = function(v)
+Tabs.Defense:CreateToggle({
+    name = "Auto Steal",
+    value = autoStealEnabled,
+    callback = function(v)
         autoStealEnabled = v
         if not v and autoStealIndicator then
             autoStealIndicator:Destroy()
@@ -387,18 +403,18 @@ DefenseLeft:AddToggle("AutoSteal", {
     end
 })
 
-DefenseLeft:AddToggle("TeamCheck", {
-    Text = "Team Check",
-    Default = teamCheck,
-    Callback = function(v)
+Tabs.Defense:CreateToggle({
+    name = "Team Check",
+    value = teamCheck,
+    callback = function(v)
         teamCheck = v
     end
 })
 
-DefenseLeft:AddToggle("ShowIndicator", {
-    Text = "Show Indicator",
-    Default = showIndicator,
-    Callback = function(v)
+Tabs.Defense:CreateToggle({
+    name = "Show Indicator",
+    value = showIndicator,
+    callback = function(v)
         showIndicator = v
         if not v and autoStealIndicator then
             autoStealIndicator:Destroy()
@@ -407,21 +423,20 @@ DefenseLeft:AddToggle("ShowIndicator", {
     end
 })
 
-DefenseLeft:AddToggle("StealAnimation", {
-    Text = "Steal Animation",
-    Default = stealAnimation,
-    Callback = function(v)
+Tabs.Defense:CreateToggle({
+    name = "Steal Animation",
+    value = stealAnimation,
+    callback = function(v)
         stealAnimation = v
     end
 })
 
-DefenseLeft:AddSlider("StealRange", {
-    Text = "Steal Range",
-    Default = stealRange,
-    Min = 0.5,
-    Max = 10,
-    Rounding = 1,
-    Callback = function(v)
+Tabs.Defense:CreateSlider({
+    name = "Steal Range",
+    range = {0.5, 10},
+    increment = 0.5,
+    value = stealRange,
+    callback = function(v)
         stealRange = v
     end
 })
@@ -516,10 +531,12 @@ RunService.RenderStepped:Connect(function()
 end)
 
 --// Auto contest - presses G when plr with ball is shooting near you \\--
-DefenseLeft:AddToggle("AutoContest", {
-    Text = "Auto Contest",
-    Default = false,
-    Callback = function(Value)
+Tabs.Defense:CreateSection({ name = "Auto Contest" })
+
+Tabs.Defense:CreateToggle({
+    name = "Auto Contest",
+    value = false,
+    callback = function(Value)
         if Value then
             if UserInputService.TouchEnabled then
                 -- mobile version uses fireserver instead of keypress
@@ -598,13 +615,13 @@ DefenseLeft:AddToggle("AutoContest", {
 })
 
 --// Block Settings \\--
-local DefenseRight = Tabs.Defense:AddRightGroupbox("Block Settings", "hand")
+Tabs.Defense:CreateSection({ name = "Block Settings" })
 
 --// Auto block - presses space when plr shooting anim plays near you \\--
-DefenseRight:AddToggle("AutoBlock", {
-    Text = "Auto Block",
-    Default = false,
-    Callback = function(v)
+Tabs.Defense:CreateToggle({
+    name = "Auto Block",
+    value = false,
+    callback = function(v)
         if v then
             local blockIds = {
                 ["15625460755"] = true,
@@ -635,14 +652,15 @@ DefenseRight:AddToggle("AutoBlock", {
     end
 })
 
-local DefenseUtils = Tabs.Defense:AddRightGroupbox("Defensive Utilities", "wrench")
+--// Defensive Utilities \\--
+Tabs.Defense:CreateSection({ name = "Defensive Utilities" })
 
-DefenseUtils:AddButton({
-    Text = "No Steal Cooldown",
-    Func = function()
+Tabs.Defense:CreateButton({
+    name = "No Steal Cooldown",
+    callback = function()
         local vals = require(Players.LocalPlayer.PlayerScripts.BallValues)
-        spawn(function()
-            while wait() do
+        task.spawn(function()
+            while task.wait() do
                 if vals.currentAnim == "Steal" then
                     vals.defensiveCooldown = false
                 end
@@ -652,14 +670,15 @@ DefenseUtils:AddButton({
 })
 
 --// Movement Tab \\--
-local MovementLeft = Tabs.Movement:AddLeftGroupbox("Speed", "zap")
+Tabs.Movement:CreateSection({ name = "Speed" })
+
 local currtween = nil
 
 --// tween based walkspeed (cant change directly with ws) \\--
-MovementLeft:AddToggle("Walkspeed", {
-    Text = "Walkspeed",
-    Default = walkspeedEnabled,
-    Callback = function(v)
+Tabs.Movement:CreateToggle({
+    name = "Walkspeed",
+    value = walkspeedEnabled,
+    callback = function(v)
         walkspeedEnabled = v
         if v then
             RunService.Heartbeat:Connect(function()
@@ -693,37 +712,36 @@ MovementLeft:AddToggle("Walkspeed", {
     end
 })
 
-MovementLeft:AddSlider("WalkspeedValue", {
-    Text = "Walkspeed Value",
-    Default = walkspeedValue,
-    Min = 1,
-    Max = 20,
-    Rounding = 2,
-    Callback = function(v)
+Tabs.Movement:CreateSlider({
+    name = "Walkspeed Value",
+    range = {1, 20},
+    increment = 0.25,
+    value = walkspeedValue,
+    callback = function(v)
         walkspeedValue = v
     end
 })
 
 --// Handles Settings \\--
-local MovementRight = Tabs.Movement:AddRightGroupbox("Handles", "move")
+Tabs.Movement:CreateSection({ name = "Handles & Dribble Speed" })
+
 local handlesSpeedValue = 16.25
 
-MovementRight:AddToggle("HandlesSpeed", {
-    Text = "Handles Speed Changer",
-    Default = false,
-    Callback = function(v)
+Tabs.Movement:CreateToggle({
+    name = "Handles Speed Changer",
+    value = false,
+    callback = function(v)
         local a = require(ReplicatedStorage.Modules.Values)
         a.baseSliders.handlesSpeed = v and handlesSpeedValue or 16.25
     end
 })
 
-MovementRight:AddSlider("HandlesSpeedValue", {
-    Text = "Handles Speed",
-    Default = 16.25,
-    Min = 10,
-    Max = 25,
-    Rounding = 2,
-    Callback = function(v)
+Tabs.Movement:CreateSlider({
+    name = "Handles Speed",
+    range = {10, 25},
+    increment = 0.25,
+    value = 16.25,
+    callback = function(v)
         handlesSpeedValue = v
         require(ReplicatedStorage.Modules.Values).baseSliders.handlesSpeed = v
     end
@@ -731,23 +749,22 @@ MovementRight:AddSlider("HandlesSpeedValue", {
 
 local layupSpeedValue = 12.5
 
-MovementRight:AddToggle("LayupGlide", {
-    Text = "Layup Glide Changer",
-    Default = false,
-    Callback = function(v)
+Tabs.Movement:CreateToggle({
+    name = "Layup Glide Changer",
+    value = false,
+    callback = function(v)
         local a = require(ReplicatedStorage.Modules.Values)
         a.baseSliders.layupSpeed = v and layupSpeedValue or 12.5
         a.sliders.layupSpeed = v and layupSpeedValue or 12.5
     end
 })
 
-MovementRight:AddSlider("LayupGlideSpeed", {
-    Text = "Layup Glide Speed",
-    Default = 12.5,
-    Min = 1,
-    Max = 25,
-    Rounding = 2,
-    Callback = function(v)
+Tabs.Movement:CreateSlider({
+    name = "Layup Glide Speed",
+    range = {1, 25},
+    increment = 0.5,
+    value = 12.5,
+    callback = function(v)
         layupSpeedValue = v
         local a = require(ReplicatedStorage.Modules.Values)
         a.baseSliders.layupSpeed = v
@@ -756,10 +773,10 @@ MovementRight:AddSlider("LayupGlideSpeed", {
 })
 
 --// Switches dribble hand away from the defender automatically \\--
-MovementRight:AddToggle("AutoSwitchHands", {
-    Text = "Auto Switch Hands",
-    Default = false,
-    Callback = function(v)
+Tabs.Movement:CreateToggle({
+    name = "Auto Switch Hands",
+    value = false,
+    callback = function(v)
         if v then
             local playerScripts = p:WaitForChild("PlayerScripts")
             local scriptValues = require(playerScripts:WaitForChild("BallValues"))
@@ -798,13 +815,13 @@ MovementRight:AddToggle("AutoSwitchHands", {
 })
 
 --// Stamina \\--
-local StaminaBox = Tabs.Movement:AddLeftGroupbox("Stamina", "battery")
+Tabs.Movement:CreateSection({ name = "Stamina" })
 
 --//  \\--
-StaminaBox:AddToggle("InfiniteStamina", {
-    Text = "Infinite Stamina",
-    Default = false,
-    Callback = function(v)
+Tabs.Movement:CreateToggle({
+    name = "Infinite Stamina",
+    value = false,
+    callback = function(v)
         if v then
             local PlayerScripts = Players.LocalPlayer:FindFirstChild("PlayerScripts")
             local BallFunctions = require(PlayerScripts:FindFirstChild("BallFunctions"))
@@ -832,9 +849,9 @@ StaminaBox:AddToggle("InfiniteStamina", {
     end
 })
 
-StaminaBox:AddButton({
-    Text = "Max Stamina Regen (More legit)",
-    Func = function()
+Tabs.Movement:CreateButton({
+    name = "Max Stamina Regen (More legit)",
+    callback = function()
         local playerScripts = Players.LocalPlayer:WaitForChild("PlayerScripts")
         local scriptValues = require(playerScripts:WaitForChild("BallValues"))
 
@@ -854,7 +871,6 @@ StaminaBox:AddButton({
         end
     end
 })
-
 
 --// Visuals Tab \\--
 local replicatedModules = ReplicatedStorage:WaitForChild("Modules")
@@ -896,21 +912,22 @@ local function applyColor(char: Model, colorName: string)
     end
 end
 
-local VisualsBox = Tabs.Visuals:AddLeftGroupbox("Cosmetics", "shirt")
+Tabs.Visuals:CreateSection({ name = "Cosmetics" })
+
 local colorLoopEnabled = false
 
 --// go through a random jersey color every 0.1s \\--
-VisualsBox:AddToggle("RainbowJersey", {
-    Text = "Rainbow Jersey",
-    Default = false,
-    Callback = function(v)
+Tabs.Visuals:CreateToggle({
+    name = "Rainbow Jersey",
+    value = false,
+    callback = function(v)
         colorLoopEnabled = v
         if v then
             local colorNames = {}
             for name in pairs(clothingList.Colors) do
                 table.insert(colorNames, name)
             end
-            spawn(function()
+            task.spawn(function()
                 while colorLoopEnabled do
                     local randomColor = colorNames[math.random(1, #colorNames)]
                     if p.Character then
@@ -928,22 +945,23 @@ for name in pairs(clothingList.Colors) do
     table.insert(colorList, name)
 end
 
-VisualsBox:AddDropdown("ColorPicker", {
-    Values = colorList,
-    Default = 1,
-    Text = "Jersey Color",
-    Callback = function(Value)
-        if p.Character then
-            applyColor(p.Character, Value)
+Tabs.Visuals:CreateDropdown({
+    name = "Jersey Color",
+    options = colorList,
+    value = colorList[1] or "Institutional white",
+    callback = function(Value)
+        local val = typeof(Value) == "table" and Value[1] or Value
+        if p.Character and val then
+            applyColor(p.Character, val)
         end
     end
 })
 
-VisualsBox:AddInput("HexColor", {
-    Default = "FF0000",
-    Text = "Custom Hex Color",
-    Placeholder = "FF0000",
-    Callback = function(Value)
+Tabs.Visuals:CreateInput({
+    name = "Custom Hex Color",
+    value = "FF0000",
+    placeholder = "FF0000",
+    callback = function(Value)
         if p.Character and #Value == 6 then
             applyColor(p.Character, Value)
         end
@@ -951,14 +969,15 @@ VisualsBox:AddInput("HexColor", {
 })
 
 --// Misc Tab \\--
-local MiscLeft = Tabs.Misc:AddLeftGroupbox("Ball Utilities", "circle")
+Tabs.Misc:CreateSection({ name = "Ball Utilities" })
+
 local ballMagConnection, lastPickupTime = nil, 0
 
 --// fires pickup remote on any ball within range every 0.1s (bannable) \\--
-MiscLeft:AddToggle("BallMag", {
-    Text = "Ball Mag",
-    Default = false,
-    Callback = function(v)
+Tabs.Misc:CreateToggle({
+    name = "Ball Mag",
+    value = false,
+    callback = function(v)
         if v then
             ballMagConnection = RunService.Heartbeat:Connect(function()
                 local char = Players.LocalPlayer.Character
@@ -984,13 +1003,13 @@ MiscLeft:AddToggle("BallMag", {
     end
 })
 
-local MiscRight = Tabs.Misc:AddRightGroupbox("???????", "shield-check")
+Tabs.Misc:CreateSection({ name = "Anti-Effects & Stuns" })
 
 --// blocks pushed/knock events from the server and resets knock state every frame \\--
-MiscRight:AddToggle("AntiKnockback", {
-    Text = "Anti Knockback/Pushed",
-    Default = false,
-    Callback = function(v)
+Tabs.Misc:CreateToggle({
+    name = "Anti Knockback/Pushed",
+    value = false,
+    callback = function(v)
         if v then
             local sv = require(Players.LocalPlayer.PlayerScripts.BallValues)
             local sf = require(Players.LocalPlayer.PlayerScripts.BallFunctions)
@@ -1044,11 +1063,193 @@ MiscRight:AddToggle("AntiKnockback", {
     end
 })
 
-local DribbleRight = Tabs.DribbleModifier:AddRightGroupbox("Utilities")
+--//  \\--
+Tabs.Misc:CreateToggle({
+    name = "Anti-Ankle Breaker",
+    value = false,
+    callback = function(v)
+        local bf = require(Players.LocalPlayer.PlayerScripts.BallFunctions)
+        bf.ankles = v and newcclosure(function() end) or (bf.originalAnkles or bf.ankles)
+    end
+})
 
-DribbleRight:AddButton({
-    Text = "Unlock All Dribble Moves",
-    Func = function()
+--// disable the hitbox touched connection that cause the stun \\--
+Tabs.Misc:CreateButton({
+    name = "Remove Dunk Poster Stun",
+    callback = function()
+        local hitBox = Players.LocalPlayer.Character:WaitForChild("hit")
+        for _, conn in pairs(getconnections(hitBox.Touched)) do
+            conn:Disable()
+        end
+    end
+})
+
+Tabs.Misc:CreateSection({ name = "Combat Exploits" })
+
+-- new stuff
+Tabs.Misc:CreateButton({
+    name = "Stamina Drain (push on touch)",
+    callback = function()
+        local rep = cloneref(game:GetService("ReplicatedStorage"))
+        local plr = Players.LocalPlayer
+        local char = plr.Character or plr.CharacterAdded:Wait()
+        local hit = char:WaitForChild("hit")
+        local ev = rep:WaitForChild("BallEvent")
+
+        local old
+        old = hookfunction(ev.FireServer, function(self, ...)
+            local a = {...}
+
+            if a[2] == "push" and a[3] then
+                local t = a[3]
+
+                if t and t ~= plr then
+                    for i = 1, 5 do
+                        task.spawn(function()
+                            old(self, nil, "push", t)
+                        end)
+                    end
+                end
+            end
+
+            return old(self, ...)
+        end)
+
+        hit.Touched:Connect(function(touchPart)
+            if touchPart.Parent and touchPart.Parent:FindFirstChild("Humanoid") then
+                local t = Players:GetPlayerFromCharacter(touchPart.Parent)
+
+                if t and t ~= plr and t.Team ~= plr.Team then
+                    for i = 1, 3 do
+                        task.wait(0.1)
+                        ev:FireServer(nil, "push", t)
+                    end
+                end
+            end
+        end)
+    end
+})
+
+--// Badges \\--
+Tabs.Misc:CreateSection({ name = "Badges" })
+
+--// sets all badge upgrade costs to 0 so you can unlock them for free (requires badge points tho) \\--
+Tabs.Misc:CreateButton({
+    name = "Infinite Badge Levels",
+    callback = function()
+        local rep = cloneref(game:GetService("ReplicatedStorage"))
+        local replicatedModulesLocal = rep:WaitForChild("Modules")
+        local functionsModule = require(replicatedModulesLocal:WaitForChild("Functions"))
+
+        local oldGetBadgeMaxLevel = functionsModule.getBadgeMaxLevel
+        functionsModule.getBadgeMaxLevel = function(badgeName, height, weight)
+            return 8
+        end
+
+        functionsModule.getBadgeLevel = function(points, badgeName, height, weight)
+            return 8, 8
+        end
+
+        local valuesModule = require(replicatedModulesLocal:WaitForChild("Values"))
+        if valuesModule.badgeUpgrades then
+            for badgeName, cost in pairs(valuesModule.badgeUpgrades) do
+                valuesModule.badgeUpgrades[badgeName] = 0
+            end
+        end
+    end
+})
+
+--// Teleports \\--
+Tabs.Misc:CreateSection({ name = "Teleports" })
+
+--// Place ids mapped to their names \\--
+local tp = {
+    ["18638157143"] = "Beginner",
+    ["113454014057557"] = "Intermediate",
+    ["117737879114585"] = "Advanced",
+    ["18668109315"] = "Private",
+    ["15583100726"] = "Lobby",
+    ["138786645426705"] = "Afk Zone",
+    ["131054006918765"] = "Park",
+    ["111682393431323"] = "Rec Center"
+}
+
+for id, name in pairs(tp) do
+    Tabs.Misc:CreateButton({
+        name = name,
+        callback = function()
+            TeleportService:Teleport(tonumber(id), Players.LocalPlayer)
+        end
+    })
+end
+
+--// Dribble Modifier Tab \\--
+Tabs.DribbleModifier:CreateSection({ name = "Moves (Max allowed : 1)" })
+
+local moves = {
+    "Cross", "Hezi", "BehindDouble", "Crossover",
+    "CrossoverBehind", "Spin", "BTBPickup",
+    "StepbackSwitch", "Stepback", "StepbackBetween", "Switch"
+}
+
+local selectedMove = "BTBPickup"
+local moveChance = 100
+local dribbleModifierEnabled = false
+
+Tabs.DribbleModifier:CreateDropdown({
+    name = "Dribble Move",
+    options = moves,
+    value = "BTBPickup",
+    callback = function(v)
+        selectedMove = typeof(v) == "table" and v[1] or v
+    end
+})
+
+Tabs.DribbleModifier:CreateSlider({
+    name = "Chance of doing that move %",
+    range = {1, 100},
+    increment = 1,
+    value = 100,
+    callback = function(v)
+        moveChance = v
+    end
+})
+
+Tabs.DribbleModifier:CreateToggle({
+    name = "Enable Dribble Modifier",
+    value = false,
+    callback = function(v)
+        dribbleModifierEnabled = v
+    end
+})
+
+local executeFunc = filtergc("function", {
+    Name = "execute",
+    Constants = {"Handle", "Spin", "CrossoverBehind", "Stepback", "BTBPickup"}
+}, true)
+
+if executeFunc then
+    local old
+    old = hookfunction(executeFunc, newcclosure(function(...)
+        local args = {...}
+        if args[1] == "shoot" or args[1] == "pass" or args[1] == "drop" or args[1] == "steal" or args[1] == "jump" or args[1] == "ability" then
+            return old(table.unpack(args))
+        end
+
+        if dribbleModifierEnabled and math.random(1, 100) <= moveChance then
+            args[1] = "Handle"
+            args[2] = selectedMove
+        end
+
+        return old(table.unpack(args))
+    end))
+end
+
+Tabs.DribbleModifier:CreateSection({ name = "Dribble Utilities" })
+
+Tabs.DribbleModifier:CreateButton({
+    name = "Unlock All Dribble Moves (centers)",
+    callback = function()
         local valuesModule = require(ReplicatedStorage:WaitForChild("Modules"):WaitForChild("Values"))
 
         local function safeWrite(tbl, key, value)
@@ -1081,254 +1282,25 @@ DribbleRight:AddButton({
     end
 })
 
-
--- new stuff
-MiscRight:AddButton({
-    Text = "Stamina Drain (push on touch)",
-    Func = function()
-        local rep = game:GetService("ReplicatedStorage")
-        local plr = game.Players.LocalPlayer
-        local chr = plr.Character or plr.CharacterAdded:Wait()
-        local hit = chr:WaitForChild("hit")
-
-        local ev = rep:WaitForChild("BallEvent")
-
-        local old
-        old = hookfunction(ev.FireServer, function(self, ...)
-            local a = {...}
-
-            if a[2] == "push" and a[3] then
-                local t = a[3]
-
-                if t and t ~= plr then
-                    for i = 1, 5 do
-                        task.spawn(function()
-                            old(self, nil, "push", t)
-                        end)
-                    end
-                end
-            end
-
-            return old(self, ...)
-        end)
-
-        hit.Touched:Connect(function(p)
-            if p.Parent and p.Parent:FindFirstChild("Humanoid") then
-                local t = game.Players:GetPlayerFromCharacter(p.Parent)
-
-                if t and t ~= plr and t.Team ~= plr.Team then
-                    for i = 1, 3 do
-                        task.wait(0.1)
-                        ev:FireServer(nil, "push", t)
-                    end
-                end
-            end
-        end)
-    end
-})
-
---//  \\--
-MiscRight:AddToggle("AntiAnkleBreaker", {
-    Text = "Anti-Ankle Breaker",
-    Default = false,
-    Callback = function(v)
-        local bf = require(Players.LocalPlayer.PlayerScripts.BallFunctions)
-        bf.ankles = v and newcclosure(function() end) or (bf.originalAnkles or bf.ankles)
-    end
-})
-
---// disable the hitbox touched connection that cause the stun \\--
-MiscRight:AddButton({
-    Text = "Remove Dunk Poster Stun",
-    Func = function()
-        local hitBox = Players.LocalPlayer.Character:WaitForChild("hit")
-        for _, conn in pairs(getconnections(hitBox.Touched)) do
-            conn:Disable()
-        end
-    end
-})
-
---// Badges \\--
-local BadgesBox = Tabs.Misc:AddLeftGroupbox("Badges", "award")
-
---// sets all badge upgrade costs to 0 so you can unlock them for free (requires badge points tho) \\--
-BadgesBox:AddButton({
-    Text = "Infinite Badge Levels",
-    Func = function()
-        local rep = game:GetService("ReplicatedStorage")
-        local replicatedModules = rep:WaitForChild("Modules")
-        local functionsModule = require(replicatedModules:WaitForChild("Functions"))
-
-        local oldGetBadgeMaxLevel = functionsModule.getBadgeMaxLevel
-        functionsModule.getBadgeMaxLevel = function(badgeName, height, weight)
-            return 8
-        end
-
-        local oldGetBadgeLevel = functionsModule.getBadgeLevel
-        functionsModule.getBadgeLevel = function(points, badgeName, height, weight)
-            return 8, 8
-        end
-
-        local valuesModule = require(replicatedModules:WaitForChild("Values"))
-        if valuesModule.badgeUpgrades then
-            for badgeName, cost in pairs(valuesModule.badgeUpgrades) do
-                valuesModule.badgeUpgrades[badgeName] = 0
-            end
-        end
-    end
-})
-
---// Teleports \\--
-local TeleportsBox = Tabs.Misc:AddRightGroupbox("Teleports", "map-pin")
-
---// Place ids mapped to their names \\--
-local tp = {
-    ["18638157143"] = "Beginner",
-    ["113454014057557"] = "Intermediate",
-    ["117737879114585"] = "Advanced",
-    ["18668109315"] = "Private",
-    ["15583100726"] = "Lobby",
-    ["138786645426705"] = "Afk Zone",
-    ["131054006918765"] = "Park",
-    ["111682393431323"] = "Rec Center"
-}
-
-for id, name in pairs(tp) do
-    TeleportsBox:AddButton({
-        Text = name,
-        Func = function()
-            TeleportService:Teleport(tonumber(id), Players.LocalPlayer)
-        end
-    })
-end
-
-local DribbleLeft = Tabs.DribbleModifier:AddLeftGroupbox("Moves (Max allowed : 1)")
-
-local moves = {
-    "Cross", "Hezi", "BehindDouble", "Crossover",
-    "CrossoverBehind", "Spin", "BTBPickup",
-    "StepbackSwitch", "Stepback", "StepbackBetween", "Switch"
-}
-
-local selectedMove = "BTBPickup"
-local moveChance = 100
-
-DribbleLeft:AddDropdown("DribbleMoveSelect", {
-    Values = moves,
-    Default = "BTBPickup",
-    Text = "Dribble Move",
-    Callback = function(v)
-        selectedMove = v
-    end
-})
-
-DribbleLeft:AddSlider("DribbleMoveChance", {
-    Text = "Chance of doing that move %",
-    Default = 100,
-    Min = 1,
-    Max = 100,
-    Rounding = 0,
-    Callback = function(v)
-        moveChance = v
-    end
-})
-
-DribbleLeft:AddToggle("DribbleModifierEnabled", {
-    Text = "Enable Dribble Modifier",
-    Default = false,
-})
-
-local executeFunc = filtergc("function", {
-    Name = "execute",
-    Constants = {"Handle", "Spin", "CrossoverBehind", "Stepback", "BTBPickup"}
-}, true)
-
-if executeFunc then
-    local old
-    old = hookfunction(executeFunc, newcclosure(function(...)
-        local args = {...}
-        if args[1] == "shoot" or args[1] == "pass" or args[1] == "drop" or args[1] == "steal" or args[1] == "jump" or args[1] == "ability" then
-            return old(table.unpack(args))
-        end
-
-        if Toggles.DribbleModifierEnabled.Value and math.random(1, 100) <= moveChance then
-            args[1] = "Handle"
-            args[2] = selectedMove
-        end
-
-        return old(table.unpack(args))
-    end))
-end
-
 --// Info Tab \\--
-local InfoBox = Tabs.Info:AddLeftGroupbox("System Info", "info")
+Tabs.Info:CreateSection({ name = "System Info" })
 
-InfoBox:AddLabel("Device: " .. (UserInputService.TouchEnabled and "Mobile" or "PC"))
-InfoBox:AddLabel("Executor: " .. (identifyexecutor() or "Unknown"))
-
---// UI Settings \\--
-local MenuGroup = Tabs["UI Settings"]:AddLeftGroupbox("Menu", "wrench")
-
-MenuGroup:AddToggle("KeybindMenuOpen", {
-    Default = Library.KeybindFrame.Visible,
-    Text = "Open Keybind Menu",
-    Callback = function(value)
-        Library.KeybindFrame.Visible = value
-    end
+Tabs.Info:CreateButton({
+    name = "Device: " .. (UserInputService.TouchEnabled and "Mobile" or "PC"),
+    callback = function() end
 })
 
-MenuGroup:AddToggle("ShowCustomCursor", {
-    Text = "Custom Cursor",
-    Default = true,
-    Callback = function(Value)
-        Library.ShowCustomCursor = Value
-    end
+Tabs.Info:CreateButton({
+    name = "Executor: " .. (identifyexecutor() or "Unknown"),
+    callback = function() end
 })
-
-MenuGroup:AddDropdown("NotificationSide", {
-    Values = {"Left", "Right"},
-    Default = "Right",
-    Text = "Notification Side",
-    Callback = function(Value)
-        Library:SetNotifySide(Value)
-    end
-})
-
-
-
-MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", {Default = "RightShift", NoUI = true, Text = "Menu keybind"})
-
-MenuGroup:AddButton({
-    Text = "Unload",
-    Func = function()
-        Library:Unload()
-    end
-})
-
-Library.ToggleKeybind = Options.MenuKeybind
-
-
---// Theme + Save setup \\--
-ThemeManager:SetLibrary(Library)
-SaveManager:SetLibrary(Library)
-SaveManager:IgnoreThemeSettings()
-SaveManager:SetIgnoreIndexes({"MenuKeybind"})
-ThemeManager:SetFolder("Pulse")
-SaveManager:SetFolder("Pulse/BasketballStars3")
-SaveManager:BuildConfigSection(Tabs["UI Settings"])
-ThemeManager:ApplyToTab(Tabs["UI Settings"])
 
 --// random junk \\--
 local messages = {
     "2 new features have been added!"
 }
 
-Library:Notify({
-    Title = "Loaded",
-    Description = messages[math.random(1, #messages)],
-    Time = 10
+Window:Notify({
+    title = "Loaded",
+    content = messages[math.random(1, #messages)]
 })
-
-Library:OnUnload(function()
-    print("LOOEJ unloaded!")
-end)
