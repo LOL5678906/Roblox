@@ -1,4 +1,4 @@
--- can use Instant Task complete when teleported btw
+-- can use Instant Task complete when teleported btw (POLICE ONLY)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
