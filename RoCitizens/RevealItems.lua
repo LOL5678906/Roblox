@@ -1,4 +1,4 @@
--- // @scriptalua
+-- // @scriptalua (for night market)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Relays = ReplicatedStorage.Modules.Events.NightMarket.Relays
