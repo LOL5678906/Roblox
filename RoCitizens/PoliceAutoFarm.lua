@@ -110,4 +110,4 @@ function AutoPoliceFarm.Stop()
     AutoPoliceFarm.Running = false
 end
 
-AutoPoliceFarm.Start()
+-- AutoPoliceFarm.Start()
