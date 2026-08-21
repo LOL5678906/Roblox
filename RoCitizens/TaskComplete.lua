@@ -1,3 +1,5 @@
+-- POLICE ONLY
+
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Interaction = ReplicatedStorage:WaitForChild("Relays").Crime.PoliceTaskInteraction
 
