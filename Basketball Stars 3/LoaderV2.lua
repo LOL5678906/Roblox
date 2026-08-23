@@ -2,7 +2,7 @@
 
 local b = game:GetService("HttpService")
 
-local Loader = "https://gist.githubusercontent.com/LOL5678906/ec26ae3c3da550efb1c76290c863b7b5/raw/b46f72059c2e097f39f55e02808ecb2574a487cc/BS3.Json"
+local Loader = "https://gist.githubusercontent.com/LOL5678906/ec26ae3c3da550efb1c76290c863b7b5/raw/4e95d5ff7555a5c60befd729f81119da910b0551/BS3.Json"
 LoaderV1 = Loader .. "?t=" .. tick()
 
 local K = table.concat({ "EqAE8p43e7yWsVYs9BpMtFcKbTZqS+D2+J3hYJYDbjQ=" })
