@@ -2,10 +2,10 @@
 
 local b = game:GetService("HttpService")
 
-local Loader = "https://gist.githubusercontent.com/LOL5678906/ec26ae3c3da550efb1c76290c863b7b5/raw/0b65ae8cdc9b3ed8bf741ffbda18ff305d670c1f/BS3.Json"
+local Loader = "https://gist.githubusercontent.com/LOL5678906/ec26ae3c3da550efb1c76290c863b7b5/raw/b46f72059c2e097f39f55e02808ecb2574a487cc/BS3.Json"
 LoaderV1 = Loader .. "?t=" .. tick()
 
-local K = table.concat({ "DavpAunUjz405frZGIp1B+kG9eI/wi6pR72wHv8OPPw=" })
+local K = table.concat({ "EqAE8p43e7yWsVYs9BpMtFcKbTZqS+D2+J3hYJYDbjQ=" })
 
 local ok1, raw = pcall(function()
     return game:HttpGet(LoaderV1)
