@@ -1,5 +1,4 @@
 --[[ @author scriptalua(scriptalua) ]]
-
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
@@ -15,8 +14,8 @@ local NADES = {
     ["Flashbang"] = {},
     ["Smoke Grenade"] = {},
     ["Decoy Grenade"] = {},
-    ["Molotov"] = { fire = true },
-    ["Incendiary Grenade"] = { fire = true },
+    ["Molotov"] = {fire = true},
+    ["Incendiary Grenade"] = {fire = true}
 }
 
 local COLOR = Color3.fromRGB(0, 255, 120)
@@ -78,15 +77,15 @@ local function getTrajectory()
         minimumFuseTime = info.fire and 0.1 or nil,
         explodeOnFloorImpact = info.fire or nil,
         rangeScale = 1,
-        isNearThrow = false,
+        isNearThrow = false
     }
 
     local params = RaycastParams.new()
     params.FilterType = Enum.RaycastFilterType.Exclude
-    params.FilterDescendantsInstances = { char, workspace:FindFirstChild("Debris"), camera }
+    params.FilterDescendantsInstances = {char, workspace:FindFirstChild("Debris"), camera}
     params.IgnoreWater = true
 
-    local pts = { state.position }
+    local pts = {state.position}
     local endPos = state.position
 
     for _ = 1, MAX_CALLS do
@@ -112,66 +111,68 @@ local function getTrajectory()
     return pts, endPos
 end
 
-RunService.RenderStepped:Connect(function()
-    if not camera then
-        camera = workspace.CurrentCamera
-        hide()
-        return
-    end
-
-    local pts, endPos = getTrajectory()
-    if not pts or #pts < 2 then
-        hide()
-        return
-    end
-
-    local segs = #pts - 1
-
-    while #lines < segs do
-        local l = Drawing.new("Line")
-        l.Thickness = 1.5
-        l.Color = COLOR
-        lines[#lines + 1] = l
-    end
-
-    for i = #lines, segs + 1, -1 do
-        lines[i]:Remove()
-        table.remove(lines, i)
-    end
-
-    local prev, prevOk
-    for i = 1, segs do
-        local l = lines[i]
-        local a = pts[i]
-        local b = pts[i + 1]
-
-        if i == 1 or not prevOk then
-            local s1, o1 = camera:WorldToViewportPoint(a)
-            prev = Vector2.new(s1.X, s1.Y)
-            prevOk = s1.Z > 0
+RunService.RenderStepped:Connect(
+    function()
+        if not camera then
+            camera = workspace.CurrentCamera
+            hide()
+            return
         end
 
-        local s2, o2 = camera:WorldToViewportPoint(b)
-        local cur = Vector2.new(s2.X, s2.Y)
-        local curOk = s2.Z > 0
+        local pts, endPos = getTrajectory()
+        if not pts or #pts < 2 then
+            hide()
+            return
+        end
 
-        if prevOk and curOk and o2 then
-            l.From = prev
-            l.To = cur
-            l.Visible = true
+        local segs = #pts - 1
+
+        while #lines < segs do
+            local l = Drawing.new("Line")
+            l.Thickness = 1.5
+            l.Color = COLOR
+            lines[#lines + 1] = l
+        end
+
+        for i = #lines, segs + 1, -1 do
+            lines[i]:Remove()
+            table.remove(lines, i)
+        end
+
+        local prev, prevOk
+        for i = 1, segs do
+            local l = lines[i]
+            local a = pts[i]
+            local b = pts[i + 1]
+
+            if i == 1 or not prevOk then
+                local s1, o1 = camera:WorldToViewportPoint(a)
+                prev = Vector2.new(s1.X, s1.Y)
+                prevOk = s1.Z > 0
+            end
+
+            local s2, o2 = camera:WorldToViewportPoint(b)
+            local cur = Vector2.new(s2.X, s2.Y)
+            local curOk = s2.Z > 0
+
+            if prevOk and curOk and o2 then
+                l.From = prev
+                l.To = cur
+                l.Visible = true
+            else
+                l.Visible = false
+            end
+
+            prev = cur
+            prevOk = curOk
+        end
+
+        local s, o = camera:WorldToViewportPoint(endPos)
+        if s.Z > 0 and o then
+            dot.Position = Vector2.new(s.X, s.Y)
+            dot.Visible = true
         else
-            l.Visible = false
+            dot.Visible = false
         end
-
-        prev = cur
-        prevOk = curOk
     end
-
-    local s, o = camera:WorldToViewportPoint(endPos)
-    if s.Z > 0 and o then
-        dot.Position = Vector2.new(s.X, s.Y)
-        dot.Visible = true
-    else
-        dot.Visible = false
-    end
-end)
+)
