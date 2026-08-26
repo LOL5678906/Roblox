@@ -1,4 +1,5 @@
 --[[ @author scriptalua(scriptalua) ]]
+-- // auto stabs anyone near you when you have a knife out, backstabs for extra damage. \\
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
