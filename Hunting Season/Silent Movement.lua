@@ -1,5 +1,5 @@
 local RS = game:GetService("ReplicatedStorage")
-local rem = RS:WaitForChild("Remotes"):WaitForChild("PlayerNoiseEvent") -- Gameplay.lua:829
+local rem = RS:WaitForChild("Remotes"):WaitForChild("PlayerNoiseEvent") 
 
 local old
 old = hookfunction(rem.FireServer, function(self, lvl)
