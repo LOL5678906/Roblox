@@ -18,6 +18,7 @@ FrontAPI.RP.FilterType = Enum.RaycastFilterType.Blacklist
 FrontAPI.RP.IgnoreWater = true
 
 local CacheList, CacheTime = {}, 0
+local CharCache = {}
 local IsBB, IsPF = false, false
 local BBChars, BBTeams, BBMap = nil, nil, {}
 local PFList, PFChan = {}, nil
@@ -40,18 +41,32 @@ warn(IsBB and "Using custom Bad Business module." or IsPF and "Using custom Phan
 --// ----------------------------------------------------------------
 --// Bad Business
 function FrontAPI.BBRefresh()
+    if BBChars and BBTeams then
+        local Ok, Fn = pcall(function() return rawget(BBChars, "GetCharacter") end)
+        if Ok and typeof(Fn) == "function" then
+            local Store = debug.getupvalues(Fn)[1]
+            if typeof(Store) == "table" then
+                BBMap = {}
+                for k, v in pairs(Store) do BBMap[tostring(typeof(v) == "Instance" and v.Name or v)] = tostring(k) end
+                FrontAPI.BBMap = BBMap
+                return
+            end
+        end
+    end
     BBMap = {}
     for _, t in ipairs(getgc(true)) do
         if typeof(t) == "table" and rawget(t, "Characters") and rawget(t, "Teams") then
             local Ch, Tm = rawget(t, "Characters"), rawget(t, "Teams")
             if BBChars == nil and typeof(rawget(Ch, "GetCharacter")) == "function" then BBChars = Ch end
             if BBTeams == nil and typeof(rawget(Tm, "GetPlayerTeam")) == "function" then BBTeams = Tm end
-            local Fn = rawget(Ch, "GetCharacter")
-            if typeof(Fn) == "function" then
-                local Store = debug.getupvalues(Fn)[1]
-                if typeof(Store) == "table" then
-                    for k, v in pairs(Store) do BBMap[tostring(typeof(v) == "Instance" and v.Name or v)] = tostring(k) end
-                end
+        end
+    end
+    if BBChars then
+        local Fn = rawget(BBChars, "GetCharacter")
+        if typeof(Fn) == "function" then
+            local Store = debug.getupvalues(Fn)[1]
+            if typeof(Store) == "table" then
+                for k, v in pairs(Store) do BBMap[tostring(typeof(v) == "Instance" and v.Name or v)] = tostring(k) end
             end
         end
     end
@@ -126,13 +141,25 @@ function FrontAPI.IsChar(Model)
     if Cam and Model:IsDescendantOf(Cam) then return false end
     if rawequal(Model, FrontAPI.LocalPlayer.Character) then return false end
     if FrontAPI.LocalPlayer.Character and Model:IsDescendantOf(FrontAPI.LocalPlayer.Character) then return false end
-    if not Model:FindFirstChildWhichIsA("BasePart", true) then return false end
-    if not Model:FindFirstChild("Health") and not Model:FindFirstChildOfClass("Humanoid") then return false end
+    local cached = CharCache[Model]
+    local hasPart, hasHealth
+    if cached then
+        hasPart, hasHealth = cached[1], cached[2]
+    else
+        hasPart = Model:FindFirstChildWhichIsA("BasePart", true) ~= nil
+        hasHealth = Model:FindFirstChild("Health") ~= nil
+        CharCache[Model] = { hasPart, hasHealth }
+    end
+    if not hasPart then return false end
     local Real = FrontAPI.RealName(Model)
     if Real == FrontAPI.LocalPlayer.Name then return false end
     if FrontAPI.TeamCheck then
         local A, B = FrontAPI.TeamOf(Real), FrontAPI.TeamOf(FrontAPI.LocalPlayer.Name)
         if A ~= "?" and B ~= "?" and A == B and A ~= "FFA" then return false end
+    end
+    if not hasHealth then
+        local Hum = Model:FindFirstChildOfClass("Humanoid")
+        if not (Hum and Hum.Health > 0) then return false end
     end
     return true
 end
@@ -182,7 +209,10 @@ function FrontAPI.Get()
         local Found, Seen = {}, {}
         for Name, Data in pairs(PFList) do
             if Name ~= FrontAPI.LocalPlayer.Name and tostring(Data.Team) ~= tostring(FrontAPI.LocalPlayer.TeamColor) then
+                local n = 0
                 for _, Part in ipairs(Data.Parts) do
+                    n += 1
+                    if n > 4 then break end
                     if FrontAPI.View(Cam, Part.Position) and FrontAPI.Vis(Org, Part.Position, nil, Data.Parts) then
                         if not Seen[Name] then Seen[Name] = true Found[#Found + 1] = Name end
                         break
@@ -196,11 +226,16 @@ function FrontAPI.Get()
     local Found, Seen = {}, {}
     for _, m in ipairs(FrontAPI.Cands()) do
         if FrontAPI.IsChar(m) then
+            local n = 0
             for _, p in ipairs(m:GetDescendants()) do
-                if p:IsA("BasePart") and FrontAPI.View(Cam, p.Position) and FrontAPI.Vis(Org, p.Position, m) then
-                    local Nm = FrontAPI.RealName(m)
-                    if not Seen[Nm] then Seen[Nm] = true Found[#Found + 1] = Nm end
-                    break
+                if p:IsA("BasePart") then
+                    n += 1
+                    if n > 4 then break end
+                    if FrontAPI.View(Cam, p.Position) and FrontAPI.Vis(Org, p.Position, m) then
+                        local Nm = FrontAPI.RealName(m)
+                        if not Seen[Nm] then Seen[Nm] = true Found[#Found + 1] = Nm end
+                        break
+                    end
                 end
             end
         end
