@@ -1,6 +1,7 @@
-local GAS_URL = "https://script.google.com/macros/s/AKfycbyXmf45MIXoX3b5kLEch98Dzz0JEEreFVPyPN6UGVBjz4VXm2BJ2fkG6ubLG2Xn62w0/exec"
+getgenv().Key = "GRAB ME"
+local GAS_URL = "https://script.google.com/macros/s/AKfycbwOCyTfueJjK7S0Fiycdr5yXCwV3fXsZT9qOyJd10XoFl3puTC4mCysqjfUwaQ9CG_TPg/exec"
 
-local USER_KEY = getgenv().REFLEX_KEY or ""
+local USER_KEY = getgenv().Key or ""
 
 local HttpService = game:GetService("HttpService")
 local Players     = game:GetService("Players")
@@ -9,7 +10,7 @@ local LocalPlayer = Players.LocalPlayer
 
 if type(GAS_URL) ~= "string"
     or not GAS_URL:match("^https://script%.google%.com/macros/s/[A-Za-z0-9-_]+/exec$") then
-    LocalPlayer:Kick("[REFLEX] Bad auth URL")
+    LocalPlayer:Kick("Bad auth URL")
     return
 end
 
@@ -43,33 +44,60 @@ local function fetch(url)
     return nil
 end
 
+local function PublicIP()
+    local urls = { "https://api.ipify.org", "https://icanhazip.com" }
+    for _, u in ipairs(urls) do
+        local body = fetch(u)
+        if type(body) == "string" then
+            local ip = body:gsub("%s+", "")
+            if ip:match("^%d+%.%d+%.%d+%.%d+$") or ip:match("^[%x:]+$") then
+                return ip
+            end
+        end
+    end
+    return "UNKNOWN"
+end
+
 local hwid = HWID()
+local ip = PublicIP()
 local raw = fetch(GAS_URL .. "?hwid=" .. HttpService:UrlEncode(hwid)
+    .. "&ip=" .. HttpService:UrlEncode(ip)
     .. "&key=" .. HttpService:UrlEncode(USER_KEY)
     .. "&user=" .. HttpService:UrlEncode(LocalPlayer.Name)
+    .. "&userid=" .. tostring(LocalPlayer.UserId)
+    .. "&place=" .. tostring(game.PlaceId)
     .. "&t=" .. tick())
 
 if not raw then
-    LocalPlayer:Kick("[REFLEX] Auth server unreachable")
+    LocalPlayer:Kick("Auth server unreachable")
     return
 end
 
 local ok, res = pcall(HttpService.JSONDecode, HttpService, raw)
 raw = nil
 if not ok or type(res) ~= "table" then
-    LocalPlayer:Kick("[REFLEX] Bad auth response")
+    LocalPlayer:Kick("Bad auth response")
     return
 end
 
 if res.ok ~= true or type(res.src) ~= "string" or #res.src == 0 then
     local reason = tostring(res.reason or "Auth failed")
     pcall(setclipboard, hwid)
-    LocalPlayer:Kick("[REFLEX] " .. reason)
+    LocalPlayer:Kick(reason)
     return
 end
 
-local chunk = loadstring(res.src, "=reflex")
+local chunk = loadstring(res.src)
 res = nil
 if chunk then
+    pcall(function()
+        local g = getgenv and getgenv() or _G
+        g.GAS = GAS_URL
+        g.H = hwid
+        g.K = USER_KEY
+        g.U = LocalPlayer.Name
+        g.P = tostring(game.PlaceId)
+        g.IP = ip
+    end)
     chunk()
 end
