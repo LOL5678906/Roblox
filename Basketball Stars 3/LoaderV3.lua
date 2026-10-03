@@ -1,5 +1,5 @@
 getgenv().Key = "GRAB ME"
-local GAS_URL = "https://script.google.com/macros/s/AKfycbxcMcz9eJ28WhgTNaU1-zgTntgoZgboFk2MOquKbO5EdpLM_bsycO616G6UAin0conW/exec"
+local GAS_URL = "https://script.google.com/macros/s/AKfycbwx1aicJqDoUwq8sm0ynvNotVbrE8XJHkE5bKViZy_tLhIBD-xhB0n7n6aO17eB10k6/exec"
 
 local USER_KEY = getgenv().Key or ""
 
