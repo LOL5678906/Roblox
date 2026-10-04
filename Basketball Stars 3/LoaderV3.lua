@@ -1,5 +1,5 @@
-getgenv().Key = "10426"
-local GAS_URL = "https://script.google.com/macros/s/AKfycbxLCc3-RpwZydccfnY8ZhIF13327TyrShJdROooHAwecKc5R5T0dU58dBMQDVijcXIr/exec"
+getgenv().Key = "77"
+local GAS_URL = "https://script.google.com/macros/s/AKfycbzDc9uYl5eGeXAFBkD6P6khX48ORY2aI_-agNOfWl-dUwFjMGmrnGOCYqm-3aQBtbfm/exec"
 
 local USER_KEY = getgenv().Key or ""
 
