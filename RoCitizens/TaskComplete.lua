@@ -3,7 +3,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Interaction = ReplicatedStorage:WaitForChild("Relays").Crime.PoliceTaskInteraction
 
-local function InstantTaskComplete()
+local function Complete()
     local ok, success, err = pcall(function()
         return Interaction:InvokeServer("VehicleTicket")
     end)
@@ -15,4 +15,4 @@ local function InstantTaskComplete()
     return success, err
 end
 
-InstantTaskComplete()
+Complete()
