@@ -87,7 +87,7 @@ function AutoPoliceFarm.Start(retryInterval)
             end
 
             if teleported then
-                task.wait(1) -- let client render settle before completing
+                task.wait(1) 
                 if TryComplete() then
                     local cooldown = 0
                     while AutoPoliceFarm.Running and cooldown < 65 do
