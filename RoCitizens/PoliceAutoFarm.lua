@@ -42,7 +42,7 @@ end
 local function TaskTeleport()
     local points = FindTaskPoints()
     if #points == 0 then
-        return false -- no task assigned yet
+        return false 
     end
 
     local character = LocalPlayer.Character
@@ -51,7 +51,7 @@ local function TaskTeleport()
         return false
     end
 
-    root.CFrame = points[1] + Vector3.new(0, 5, 0) -- offset up to avoid spawning inside geometry
+    root.CFrame = points[1] + Vector3.new(0, 5, 0)
     return true
 end
 
