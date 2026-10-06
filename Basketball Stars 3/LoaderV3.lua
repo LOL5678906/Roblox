@@ -1,5 +1,5 @@
 getgenv().Key = "expired-never"
-local GAS_URL = "https://script.google.com/macros/s/AKfycbzUYbVc1lWF9GgHZPU-Qpn3_LGSAFQtRYAHtyWaVnW66uzqfOq6gMowrqvNQoBHnuJatw/exec"
+local GAS_URL = "https://script.google.com/macros/s/AKfycbxqpdHwu8BC9FRjiN65C8Ah1v_sLPjfZ-B2uOVRzg_mGNhoA9tdOCZ_P65TZ8GfzjM-EA/exec"
 
 local USER_KEY = getgenv().Key or ""
 
